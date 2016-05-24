@@ -14,20 +14,16 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,20 +31,19 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 import se.grouprich.closebeacon.R;
 import se.grouprich.closebeacon.adapter.BeaconAdapter;
 import se.grouprich.closebeacon.model.Beacon;
-import se.grouprich.closebeacon.requestresponsemanager.converter.SHA1Converter;
 
 @TargetApi(23)
 public class ScanActivity extends AppCompatActivity {
+
+    public static final String SERVICE_UUID = "19721006-2004-2007-2014-acc0cbeac000";
     private BluetoothAdapter mBluetoothAdapter;
     private int REQUEST_ENABLE_BT = 1;
     private Handler mHandler;
@@ -62,7 +57,6 @@ public class ScanActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private List<Beacon> beacons;
-    private final String serviceUuid = "19721006-2004-2007-2014-acc0cbeac000";
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     public static final String TAG = ScanActivity.class.getSimpleName();
@@ -198,7 +192,7 @@ public class ScanActivity extends AppCompatActivity {
 
             } else {
 
-                mLEScanner.startScan(mScanCallback);//startScan(filters, settings, mScanCallback);
+                mLEScanner.startScan(filters, settings, mScanCallback);
             }
 
         } else {
@@ -231,7 +225,7 @@ public class ScanActivity extends AppCompatActivity {
             final List<ParcelUuid> serviceUuids = result.getScanRecord().getServiceUuids();
             final List<String> serviceUuidsString = new ArrayList<>();
 
-            if(serviceUuids != null) {
+            if (serviceUuids != null) {
 
                 for (ParcelUuid serviceUuid : serviceUuids) {
 
@@ -239,21 +233,21 @@ public class ScanActivity extends AppCompatActivity {
                 }
             }
 
-            if (serviceUuidsString.contains(serviceUuid) && checkMacAddress(String.valueOf(result.getDevice().getAddress()))){
+            if (serviceUuidsString.contains(SERVICE_UUID) && checkMacAddress(String.valueOf(result.getDevice().getAddress()))) {
 
 //                if ((uuidFromScan != null) && (serviceUuid.equals(uuidFromScan)) &&
 //                        checkMacAddress(String.valueOf(result.getDevice().getAddress()))) {
 
-                    Beacon iBeacon = new Beacon(String.valueOf(result.getDevice().getName()),
-                            String.valueOf(result.getDevice().getAddress()),
-                            String.valueOf(result.getRssi()),
+                Beacon iBeacon = new Beacon(String.valueOf(result.getDevice().getName()),
+                        String.valueOf(result.getDevice().getAddress()),
+                        String.valueOf(result.getRssi()),
 //                            String.valueOf(result.getScanRecord().getServiceUuids()).replace("[", "").replace("]", ""));
-                            serviceUuid);
+                        SERVICE_UUID);
 
-                    //addBeacon(iBeacon);
-                    Log.i("**== ADDED ***", "");
-                    beacons.add(iBeacon);
-                }
+                //addBeacon(iBeacon);
+                Log.i("**== ADDED ***", "");
+                beacons.add(iBeacon);
+            }
 
             displayBeaconsList();
             connectToDevice(btDevice);
@@ -293,7 +287,23 @@ public class ScanActivity extends AppCompatActivity {
         if (mGatt == null) {
 
             mGatt = device.connectGatt(this, false, gattCallback);
-            scanLeDevice(false);// will stop after first device detection
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    scanLeDevice(false);// will stop after five seconds
+                }
+            }, 10000);
+
+        }else{
+
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    scanLeDevice(false);// will stop after five seconds
+                }
+            }, 10000);
         }
     }
 
@@ -325,7 +335,7 @@ public class ScanActivity extends AppCompatActivity {
 
             List<BluetoothGattService> services = gatt.getServices();
             Log.i("onServicesDiscovered", services.toString());
-            if(!services.isEmpty()) {
+            if (!services.isEmpty()) {
                 gatt.readCharacteristic(services.get(1).getCharacteristics().get(0));
             }
         }

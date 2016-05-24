@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,10 +27,10 @@ import se.grouprich.closebeacon.requestresponsemanager.converter.KeyConverter;
 import se.grouprich.closebeacon.requestresponsemanager.converter.SHA1Converter;
 import se.grouprich.closebeacon.retrofit.RetrofitManager;
 
-public class AuthorizationActivity extends AppCompatActivity {
+public final class AuthorizationActivity extends AppCompatActivity {
 
     public static final String TAG = AuthorizationActivity.class.getSimpleName();
-    public static final String AUTH_CODE_KEY = "authCodeKey";
+    public static final String AUTH_CODE_KEY = "se.grouprich.closebeacon.AUTH_CODE_KEY";
     private TextView textAuthCode;
     private String authenticationCode;
     private PublicKey publicKey;
@@ -45,8 +46,8 @@ public class AuthorizationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
 
-        preferences = getSharedPreferences(MainActivity.BEACON_PREFERENCES, 0);
-        String publicKeyAsString = preferences.getString(MainActivity.PUBLIC_KEY_AS_STRING_KEY, null);
+        preferences = getSharedPreferences(MainActivity.BEACON_PREFERENCES, MODE_PRIVATE);
+        final String publicKeyAsString = preferences.getString(MainActivity.PUBLIC_KEY_AS_STRING_KEY, null);
 
         try {
 
@@ -59,7 +60,7 @@ public class AuthorizationActivity extends AppCompatActivity {
 
         if (publicKey != null) {
 
-            Button buttonAuth = (Button) findViewById(R.id.button_authorize);
+            final Button buttonAuth = (Button) findViewById(R.id.button_authorize);
             textAuthCode = (EditText) findViewById(R.id.editText_auth_code);
             dialog = new InvalidAuthCodeDialog(context);
 
@@ -78,15 +79,14 @@ public class AuthorizationActivity extends AppCompatActivity {
 
                         } else {
 
-                            AuthorizationByteArrayBuilder requestBuilder = new AuthorizationByteArrayBuilder();
+                            final AuthorizationByteArrayBuilder requestBuilder = new AuthorizationByteArrayBuilder();
                             final byte[] authRequestByteArray = requestBuilder.buildAuthRequestByteArray(authenticationCode);
                             final byte[] authCodePlusOkByteArray = requestBuilder.buildResponseOkByteArray(authRequestByteArray);
                             final byte[] authCodePlusUnknownByteArray = requestBuilder.buildResponseUnknownByteArray(authRequestByteArray);
 
-                            Log.d("authReq", authRequestByteArray.toString());
+                            Log.d("authReq", Arrays.toString(authRequestByteArray));
 
                             try {
-
                                 responseOk = SHA1Converter.byteArrayToSHA1(authCodePlusOkByteArray);
                                 responseUnknown = SHA1Converter.byteArrayToSHA1(authCodePlusUnknownByteArray);
 
@@ -99,9 +99,7 @@ public class AuthorizationActivity extends AppCompatActivity {
                             Log.d("authCodePlusUnknown", responseUnknown);
 
                             String authorizationRequest = null;
-
                             try {
-
                                 authorizationRequest = RequestBuilder.buildRequest(publicKey, authRequestByteArray);
 
                             } catch (Exception e) {
@@ -111,8 +109,8 @@ public class AuthorizationActivity extends AppCompatActivity {
 
                             Log.d("authReq", authorizationRequest);
 
-                            RetrofitManager retrofitManager = new RetrofitManager();
-                            Call<String> result = retrofitManager.getBeaconService().getAuthorizationResponse(authorizationRequest);
+                            final RetrofitManager retrofitManager = new RetrofitManager();
+                            final Call<String> result = retrofitManager.getBeaconService().getAuthorizationResponse(authorizationRequest);
 
                             result.enqueue(new Callback<String>() {
 
@@ -129,7 +127,7 @@ public class AuthorizationActivity extends AppCompatActivity {
                                                 .putString(AUTH_CODE_KEY, authenticationCode)
                                                 .apply();
 
-                                        Intent intent = new Intent(context, ScanActivity.class);
+                                        final Intent intent = new Intent(context, ScanActivity.class);
                                         startActivity(intent);
 
                                     } else {
