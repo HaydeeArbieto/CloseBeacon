@@ -301,7 +301,7 @@ public class ScanActivity extends AppCompatActivity {
                 @Override
                 public void run() {
 
-                    scanLeDevice(false);// will stop after five seconds
+                    scanLeDevice(false);// will stop after ten seconds
                 }
             }, 10000);
         }
