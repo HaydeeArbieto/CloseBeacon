@@ -89,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
 
                                 JSONObject jsonResponse = response.body();
-                            
+
                                 Log.d(TAG, "{response_value:" + response.raw().code() +  ", "  + "user_id" + "");
                                 Log.d(TAG, "Response " + response.raw());
                                 Log.d(TAG, "Response " + response.isSuccessful());
