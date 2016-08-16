@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorEggshell"
     android:orientation="vertical">
 
     <Button
         android:id="@+id/button_scan_to_activate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_shape"
+        android:background="#f9d998"
         android:clickable="true"
         android:gravity="center"
         android:padding="16dp"
@@ -20,7 +19,7 @@
         android:id="@+id/button_scan_active_beacon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_shape"
+        android:background="#f9d998"
         android:clickable="true"
         android:gravity="center"
         android:padding="16dp"

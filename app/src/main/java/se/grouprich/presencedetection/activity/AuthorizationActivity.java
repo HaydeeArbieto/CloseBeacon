@@ -1,0 +1,154 @@
+/*
+package se.grouprich.presencedetection.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.util.Arrays;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import se.grouprich.presencedetection.R;
+import se.grouprich.presencedetection.dialog.InvalidAuthCodeDialog;
+import se.grouprich.presencedetection.model.AuthorizationRequest;
+import se.grouprich.presencedetection.requestresponsemanager.RequestBuilder;
+import se.grouprich.presencedetection.requestresponsemanager.converter.KeyConverter;
+import se.grouprich.presencedetection.requestresponsemanager.converter.SHA1Converter;
+import se.grouprich.presencedetection.retrofit.RetrofitManager;
+
+public final class AuthorizationActivity extends AppCompatActivity {
+
+    public static final String TAG = AuthorizationActivity.class.getSimpleName();
+    public static final String AUTH_CODE_KEY = "se.grouprich.closebeacon.AUTH_CODE_KEY";
+    private TextView textAuthCode;
+    private String authenticationCode;
+    private PublicKey publicKey;
+    private Context context = this;
+    private InvalidAuthCodeDialog dialog;
+    private String responseOk;
+    private String responseUnknown;
+    private SharedPreferences preferences;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_authorization);
+
+        preferences = getSharedPreferences(MainActivity.BEACON_PREFERENCES_KEY, MODE_PRIVATE);
+        final String publicKeyAsString = preferences.getString(MainActivity.PUBLIC_KEY_AS_STRING_KEY, null);
+
+        try {
+
+            publicKey = KeyConverter.stringToPublicKey(publicKeyAsString);
+
+        } catch (GeneralSecurityException e) {
+
+            e.printStackTrace();
+        }
+
+        if (publicKey != null) {
+
+            final Button buttonAuth = (Button) findViewById(R.id.button_authorize);
+            textAuthCode = (EditText) findViewById(R.id.editText_auth_code);
+            dialog = new InvalidAuthCodeDialog(context);
+
+            if (buttonAuth != null) {
+
+                buttonAuth.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+
+                        authenticationCode = textAuthCode.getText().toString();
+
+                        if (authenticationCode.length() != 12) {
+
+                            dialog.show();
+
+                        } else {
+
+                            final AuthorizationRequest authorizationRequest = new AuthorizationRequest(authenticationCode);
+                            final byte[] authRequestByteArray = authorizationRequest.buildByteArray();
+                            final byte[] authCodePlusOkByteArray = authorizationRequest.buildResponseOkByteArray();
+                            final byte[] authCodePlusUnknownByteArray = authorizationRequest.buildResponseUnknownByteArray();
+
+                            Log.d("authReq", Arrays.toString(authRequestByteArray));
+
+                            try {
+                                responseOk = SHA1Converter.byteArrayToSHA1(authCodePlusOkByteArray);
+                                responseUnknown = SHA1Converter.byteArrayToSHA1(authCodePlusUnknownByteArray);
+
+                            } catch (NoSuchAlgorithmException e) {
+
+                                e.printStackTrace();
+                            }
+
+                            Log.d("authCodePlusOk", responseOk);
+                            Log.d("authCodePlusUnknown", responseUnknown);
+
+                            String authRequestAsString = null;
+
+                            try {
+                                authRequestAsString = RequestBuilder.buildRequestAsString(publicKey, authRequestByteArray);
+
+                            } catch (Exception e) {
+
+                                e.printStackTrace();
+                            }
+
+                            Log.d("authReq", authRequestAsString);
+
+                            final RetrofitManager retrofitManager = new RetrofitManager();
+                            final Call<String> result = retrofitManager.getAppService().getAuthorizationResponse(authRequestAsString);
+
+                            result.enqueue(new Callback<String>() {
+
+                                @Override
+                                public void onResponse(Call<String> call, Response<String> response) {
+
+                                    Log.d("url", call.request().url().toString());
+                                    Log.d(TAG, "***************** " + response.body());
+                                    Log.d("responseOk", responseOk);
+
+                                    if (response.body().replaceFirst("=", "").equals(responseOk)) {
+
+                                        preferences.edit().putBoolean(MainActivity.APP_IS_ACTIVATED_KEY, true)
+                                                .putString(AUTH_CODE_KEY, authenticationCode)
+                                                .apply();
+
+                                        final Intent intent = new Intent(context, MainActivity.class);
+                                        startActivity(intent);
+
+                                    } else {
+
+                                        dialog.show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<String> call, Throwable t) {
+
+                                    Log.d(TAG, "Could not fetch response" + t.getMessage());
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    }
+}
+*/

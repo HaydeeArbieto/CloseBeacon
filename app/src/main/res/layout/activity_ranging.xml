@@ -2,21 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorEggshell">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/active_close_beacon_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorEggshell"
         android:padding="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@color/colorApricot"
+            android:background="#f9d998"
             android:gravity="center"
             android:padding="16dp"
             android:text="@string/active_close_beacons"
@@ -32,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/active_close_beacon_label"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/button_shape"
+        android:background="#f9d998"
         android:padding="16dp"
         android:text="@string/stop_scan" />
 
@@ -44,6 +42,6 @@
         android:layout_below="@id/button_stop_scan"
         android:clickable="true"
         android:scrollbars="vertical"
-        tools:context="se.grouprich.closebeacon.MainActivity" />
+        tools:context="se.grouprich.presencedetection.MainActivity" />
 
 </RelativeLayout>

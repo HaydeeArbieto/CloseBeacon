@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorEggshell"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorDimGray"
+        android:background="@color/colorBackground"
         android:gravity="center"
         android:padding="16dp"
         android:text="@string/configuration"
@@ -245,7 +244,7 @@
                 android:gravity="center"
                 android:hint="@string/edit_major"
                 android:inputType="number"
-                android:maxLength="2" />
+                android:maxLength="4" />
         </LinearLayout>
 
         <LinearLayout
@@ -274,7 +273,7 @@
                 android:gravity="center"
                 android:hint="@string/edit_minor"
                 android:inputType="number"
-                android:maxLength="2"
+                android:maxLength="4"
                 />
 
         </LinearLayout>

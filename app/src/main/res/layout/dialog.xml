@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
     android:padding="16dp"
-    android:background="@color/colorApricot"
+    android:background="#f9d998"
     android:orientation="vertical">
 
     <TextView
@@ -23,14 +23,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/colorEggshell"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/button_ok"
             android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:background="@color/colorEggshell"
+            android:layout_height="wrap_content"
             android:clickable="true"
             android:text="@string/button_ok"
             android:textColor="@color/colorDimGray"
